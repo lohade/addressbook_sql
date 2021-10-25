@@ -1,0 +1,321 @@
+UC1-Ability to create a Address Book Service.
+
+Ans-mysql> create database addressbook;
+Query OK, 1 row affected (0.36 sec)
+
+mysql> use addressbook;
+Database changed
+
+-----------------------------------------------------------------------------------
+UC2-Ability to create a Address Book Table with first and last names, address, city,state, zip, phone number and email as its attributes.
+
+Ans-mysql> create table addressbook_info(firstname varchar(255),lastname varchar(255),address varchar(255),city varchar(255),state varchar(255),zip int,phone int,email varchar(255));
+Query OK, 0 rows affected (2.78 sec)
+
+mysql> show tables;
++-----------------------+
+| Tables_in_addressbook |
++-----------------------+
+| addressbook_info      |
++-----------------------+
+1 row in set (0.55 sec)
+
+mysql> select *from addressbook_info;
+Empty set (0.07 sec)
+-------------------------------------------------------------------------------------
+UC3-Ability to insert new Contacts to Address Book
+Ans-insert into addressbook_info(firstname,lastname,address,city,state,zip,phone,email) values ("abhi","lohade","bhokardan","jalna","mh",431114,9730212161,"abhi@10");
+ERROR 1264 (22003): Out of range value for column 'phone' at row 1
+mysql> alter
+    -> table addressbook_info modify phone long;
+Query OK, 0 rows affected (4.36 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into addressbook_info(firstname,lastname,address,city,state,zip,phone,email) values ("abhi","lohade","bhokardan","jalna","mh",431114,9730212161,"abhi@10");
+Query OK, 1 row affected (0.23 sec)
+
+mysql> select *from addressbook_info;
++-----------+----------+-----------+-------+-------+--------+------------+---------+
+| firstname | lastname | address   | city  | state | zip    | phone      | email   |
++-----------+----------+-----------+-------+-------+--------+------------+---------+
+| abhi      | lohade   | bhokardan | jalna | mh    | 431114 | 9730212161 | abhi@10 |
++-----------+----------+-----------+-------+-------+--------+------------+---------+
+1 row in set (0.00 sec)
+-------------------------------------------------------------------------------------
+uc4-Ability to edit existing contact person using their name
+
+Ans-mysql> update addressbook_info set state="maharashtra" where firstname="abhi";
+Query OK, 1 row affected (0.14 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select *from addressbook_info;
++-----------+----------+-----------+-------+-------------+--------+------------+---------+
+| firstname | lastname | address   | city  | state       | zip    | phone      | email   |
++-----------+----------+-----------+-------+-------------+--------+------------+---------+
+| abhi      | lohade   | bhokardan | jalna | maharashtra | 431114 | 9730212161 | abhi@10 |
++-----------+----------+-----------+-------+-------------+--------+------------+---------+
+1 row in set (0.03 sec)
+-------------------------------------------------------------------------------------
+UC5-Ability to delete a person using person's name
+
+Ans-mysql> select *from addressbook_info;
++-----------+----------+-----------+--------+-------------+--------+------------+----------+
+| firstname | lastname | address   | city   | state       | zip    | phone      | email    |
++-----------+----------+-----------+--------+-------------+--------+------------+----------+
+| abhi      | lohade   | bhokardan | jalna  | maharashtra | 431114 | 9730212161 | abhi@10  |
+| harsh     | kothari  | uran      | mumbai | maharashtra | 431224 | 7045611986 | harsh@24 |
++-----------+----------+-----------+--------+-------------+--------+------------+----------+
+2 rows in set (0.05 sec)
+
+mysql> delete from addressbook_info where firstname="harsh";
+Query OK, 1 row affected (0.12 sec)
+
+mysql> select *from addressbook_info;
++-----------+----------+-----------+-------+-------------+--------+------------+---------+
+| firstname | lastname | address   | city  | state       | zip    | phone      | email   |
++-----------+----------+-----------+-------+-------------+--------+------------+---------+
+| abhi      | lohade   | bhokardan | jalna | maharashtra | 431114 | 9730212161 | abhi@10 |
++-----------+----------+-----------+-------+-------------+--------+------------+---------+
+1 row in set (0.00 sec)
+
+UC6-Ability to Retrieve Person belonging to a City or State from the Address Book
+
+Ans-mysql> select *from addressbook_info where city="mumbai" or state="maharashtra";
++-----------+----------+------------+------------+-------------+--------+------------+-----------+
+| firstname | lastname | address    | city       | state       | zip    | phone      | email     |
++-----------+----------+------------+------------+-------------+--------+------------+-----------+
+| abhi      | lohade   | bhokardan  | jalna      | maharashtra | 431114 | 9730212161 | abhi@10   |
+| harsh     | kothari  | uran       | mumbai     | maharashtra | 431224 | 7045611986 | harsh@24  |
+| pranay    | jain     | bajajnagar | aurangabad | maharashtra | 411256 | 9405611256 | pranay@32 |
++-----------+----------+------------+------------+-------------+--------+------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> update addressbook_info set state="up" where firstname="harsh";
+Query OK, 1 row affected (0.11 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select *from addressbook_info where city="jalna" or state="maharashtra";
++-----------+----------+------------+------------+-------------+--------+------------+-----------+
+| firstname | lastname | address    | city       | state       | zip    | phone      | email     |
++-----------+----------+------------+------------+-------------+--------+------------+-----------+
+| abhi      | lohade   | bhokardan  | jalna      | maharashtra | 431114 | 9730212161 | abhi@10   |
+| pranay    | jain     | bajajnagar | aurangabad | maharashtra | 411256 | 9405611256 | pranay@32 |
++-----------+----------+------------+------------+-------------+--------+------------+-----------+
+2 rows in set (0.00 sec)
+-------------------------------------------------------------------------------------
+uc7-Ability to understand the size of address book by City and State
+
+Ans-mysql> select count(*) from addressbook_info;
++----------+
+| count(*) |
++----------+
+|        3 |
++----------+
+1 row in set (0.06 sec)
+
+mysql> select count(city) from addressbook_info where state="maharashtra";
++-------------+
+| count(city) |
++-------------+
+|           2 |
++-------------+
+1 row in set (0.04 sec)
+
+mysql> select count(state) from addressbook_info where state="maharashtra";
++--------------+
+| count(state) |
++--------------+
+|            2 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select count(city) from addressbook_info where city="jalna";
++-------------+
+| count(city) |
++-------------+
+|           1 |
++-------------+
+1 row in set (0.00 sec)
+-----------------------------------------------------------------------------------
+uc8-Ability to retrieve entries sorted alphabetically by Person’s name for a given city
+
+Ans-mysql> select * from addressbook_info;
++-----------+----------+------------+------------+-------------+---------+------------+-----------+
+| firstname | lastname | address    | city       | state       | zip     | phone      | email     |
++-----------+----------+------------+------------+-------------+---------+------------+-----------+
+| abhi      | lohade   | bhokardan  | jalna      | maharashtra |  431114 | 9730212161 | abhi@10   |
+| harsh     | kothari  | uran       | mumbai     | up          |  431224 | 7045611986 | harsh@24  |
+| pranay    | jain     | bajajnagar | aurangabad | maharashtra |  411256 | 9405611256 | pranay@32 |
+| chintan   | luniya   | mgm        | jalna      | up          |  454125 | 8149632541 | chintan07 |
+| rushabh   | karna    | model      | pune       | maharashtra |  411016 | 9834178596 | rushabh31 |
+| darshan   | shah     | satana     | nashik     | ap          |  452144 | 9521478    | darshan03 |
+| pranjal   | gahan    | karanja    | pune       | maharashtra | 4521478 | 8452369874 | pranjal03 |
++-----------+----------+------------+------------+-------------+---------+------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> select * from addressbook_info where city="pune" order by firstname asc ;
++-----------+----------+---------+------+-------------+---------+------------+-----------+
+| firstname | lastname | address | city | state       | zip     | phone      | email     |
++-----------+----------+---------+------+-------------+---------+------------+-----------+
+| pranjal   | gahan    | karanja | pune | maharashtra | 4521478 | 8452369874 | pranjal03 |
+| rushabh   | karna    | model   | pune | maharashtra |  411016 | 9834178596 | rushabh31 |
++-----------+----------+---------+------+-------------+---------+------------+-----------+
+2 rows in set (0.00 sec)
+-------------------------------------------------------------------------------------
+
+uc9-Ability to identify each Address Book with name and Type.
+
+Ans-mysql> select *from addressbook_info;
++-----------+----------+------------+------------+-------------+---------+------------+-----------+
+| firstname | lastname | address    | city       | state       | zip     | phone      | email     |
++-----------+----------+------------+------------+-------------+---------+------------+-----------+
+| abhi      | lohade   | bhokardan  | jalna      | maharashtra |  431114 | 9730212161 | abhi@10   |
+| harsh     | kothari  | uran       | mumbai     | up          |  431224 | 7045611986 | harsh@24  |
+| pranay    | jain     | bajajnagar | aurangabad | maharashtra |  411256 | 9405611256 | pranay@32 |
+| chintan   | luniya   | mgm        | jalna      | up          |  454125 | 8149632541 | chintan07 |
+| rushabh   | karna    | model      | pune       | maharashtra |  411016 | 9834178596 | rushabh31 |
+| darshan   | shah     | satana     | nashik     | ap          |  452144 | 9521478    | darshan03 |
+| pranjal   | gahan    | karanja    | pune       | maharashtra | 4521478 | 8452369874 | pranjal03 |
++-----------+----------+------------+------------+-------------+---------+------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> alter table addressbook_info add bookname varchar(25) not null,add type varchar(25) not null;
+Query OK, 0 rows affected (0.40 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc addressbook_info;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| firstname | varchar(255) | YES  |     | NULL    |       |
+| lastname  | varchar(255) | YES  |     | NULL    |       |
+| address   | varchar(255) | YES  |     | NULL    |       |
+| city      | varchar(255) | YES  |     | NULL    |       |
+| state     | varchar(255) | YES  |     | NULL    |       |
+| zip       | int          | YES  |     | NULL    |       |
+| phone     | mediumtext   | YES  |     | NULL    |       |
+| email     | varchar(255) | YES  |     | NULL    |       |
+| bookname  | varchar(25)  | NO   |     | NULL    |       |
+| type      | varchar(25)  | NO   |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+10 rows in set (0.12 sec)
+
+mysql> update AddressBook_info set bookname='one', contactType='Family' where lastname='jain' ;
+ERROR 1054 (42S22): Unknown column 'contactType' in 'field list'
+mysql> update AddressBook_info set bookname='one', type='Family' where lastname='jain' ;
+Query OK, 1 row affected (0.14 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update AddressBook_info set bookname='two', type='Friends' where lastname='luniya';
+Query OK, 1 row affected (0.09 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update AddressBook_info set bookname='two', type='Friends' where firstname='rushabh';
+Query OK, 1 row affected (0.17 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select *from addressbook_info;
++-----------+----------+------------+------------+-------------+---------+------------+-----------+----------+---------+
+| firstname | lastname | address    | city       | state       | zip     | phone      | email     | bookname | type    |
++-----------+----------+------------+------------+-------------+---------+------------+-----------+----------+---------+
+| abhi      | lohade   | bhokardan  | jalna      | maharashtra |  431114 | 9730212161 | abhi@10   |          |         |
+| harsh     | kothari  | uran       | mumbai     | up          |  431224 | 7045611986 | harsh@24  |          |         |
+| pranay    | jain     | bajajnagar | aurangabad | maharashtra |  411256 | 9405611256 | pranay@32 | one      | Family  |
+| chintan   | luniya   | mgm        | jalna      | up          |  454125 | 8149632541 | chintan07 | two      | Friends |
+| rushabh   | karna    | model      | pune       | maharashtra |  411016 | 9834178596 | rushabh31 | two      | Friends |
+| darshan   | shah     | satana     | nashik     | ap          |  452144 | 9521478    | darshan03 |          |         |
+| pranjal   | gahan    | karanja    | pune       | maharashtra | 4521478 | 8452369874 | pranjal03 |          |         |
++-----------+----------+------------+------------+-------------+---------+------------+-----------+----------+---------+
+7 rows in set (0.00 sec)
+
+mysql> select *from addressbook_info where type="family";
++-----------+----------+------------+------------+-------------+--------+------------+-----------+----------+--------+
+| firstname | lastname | address    | city       | state       | zip    | phone      | email     | bookname | type   |
++-----------+----------+------------+------------+-------------+--------+------------+-----------+----------+--------+
+| pranay    | jain     | bajajnagar | aurangabad | maharashtra | 411256 | 9405611256 | pranay@32 | one      | Family |
++-----------+----------+------------+------------+-------------+--------+------------+-----------+----------+--------+
+1 row in set (0.00 sec)
+
+uc10-Ability to get number of contact persons
+
+Ans-mysql> select count(firstname) from addressbook_info where type='family';
++------------------+
+| count(firstname) |
++------------------+
+|                1 |
++------------------+
+1 row in set (0.00 sec)
+
+uc11-
+
+Ans-mysql> alter table addressbook_info add primary key (email);
+Query OK, 0 rows affected (2.76 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc addressbook_info;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| firstname | varchar(255) | YES  |     | NULL    |       |
+| lastname  | varchar(255) | YES  |     | NULL    |       |
+| address   | varchar(255) | YES  |     | NULL    |       |
+| city      | varchar(255) | YES  |     | NULL    |       |
+| state     | varchar(255) | YES  |     | NULL    |       |
+| zip       | int          | YES  |     | NULL    |       |
+| phone     | mediumtext   | YES  |     | NULL    |       |
+| email     | varchar(255) | NO   | PRI | NULL    |       |
+| bookname  | varchar(25)  | NO   |     | NULL    |       |
+| type      | varchar(25)  | NO   |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+10 rows in set (0.00 sec)
+
+mysql> create table contact (firstname varchar(60) not null,street varchar(50) not null,foreign key(email) references addressbook_info(email));
+ERROR 1072 (42000): Key column 'email' doesn't exist in table
+mysql> create table contact (firstname varchar(60) not null,street varchar(50) not null,email varchar(50) not null,foreign key(email) references addressbook_info(email));
+Query OK, 0 rows affected (1.68 sec)
+
+mysql> desc contact;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| firstname | varchar(60) | NO   |     | NULL    |       |
+| street    | varchar(50) | NO   |     | NULL    |       |
+| email     | varchar(50) | NO   | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.04 sec)
+
+mysql> alter table addressbook_info add primary key (email);
+Query OK, 0 rows affected (2.76 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc addressbook_info;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| firstname | varchar(255) | YES  |     | NULL    |       |
+| lastname  | varchar(255) | YES  |     | NULL    |       |
+| address   | varchar(255) | YES  |     | NULL    |       |
+| city      | varchar(255) | YES  |     | NULL    |       |
+| state     | varchar(255) | YES  |     | NULL    |       |
+| zip       | int          | YES  |     | NULL    |       |
+| phone     | mediumtext   | YES  |     | NULL    |       |
+| email     | varchar(255) | NO   | PRI | NULL    |       |
+| bookname  | varchar(25)  | NO   |     | NULL    |       |
+| type      | varchar(25)  | NO   |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+10 rows in set (0.00 sec)
+
+mysql> create table contact (firstname varchar(60) not null,street varchar(50) not null,foreign key(email) references addressbook_info(email));
+ERROR 1072 (42000): Key column 'email' doesn't exist in table
+mysql> create table contact (firstname varchar(60) not null,street varchar(50) not null,email varchar(50) not null,foreign key(email) references addressbook_info(email));
+Query OK, 0 rows affected (1.68 sec)
+
+mysql> desc contact;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| firstname | varchar(60) | NO   |     | NULL    |       |
+| street    | varchar(50) | NO   |     | NULL    |       |
+| email     | varchar(50) | NO   | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.04 sec)
